@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Plano de estudos IFSP Matão</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: cabeçalho com a regra do jogo, rotina diária, lista cronológica de dias, apoio ao final. Coluna única de leitura. */
+:root{
+  --bg:#f5f8f7; --surface:#ffffff; --fg:#16241f; --muted:#51625b; --line:#d3deda;
+  --accent:#005f9e; --accent-soft:#e2eef7; --sim:#8a5a00; --sim-soft:#fbf0d9; --ok:#1f7a4d;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif; --body:"Source Sans 3","Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101815; --surface:#18221e; --fg:#e6efeb; --muted:#9fb1a9; --line:#2d3b35;
+  --accent:#7dbdf0; --accent-soft:#17303f; --sim:#f0c36b; --sim-soft:#352a12; --ok:#6fd0a0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101815; --surface:#18221e; --fg:#e6efeb; --muted:#9fb1a9; --line:#2d3b35;
+  --accent:#7dbdf0; --accent-soft:#17303f; --sim:#f0c36b; --sim-soft:#352a12; --ok:#6fd0a0; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:820px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:36px}
+.wrap>*{min-width:0}
+h1,h2,h3{font-family:var(--display);line-height:1.2;margin:0;text-wrap:balance}
+h1{font-size:2rem} h2{font-size:1.35rem} h3{font-size:1.05rem}
+p{margin:0;max-width:65ch} a{color:var(--accent)}
+.stack{display:grid;gap:12px}
+.muted{color:var(--muted)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 12px 8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--display);font-size:.85rem;color:var(--muted)}
+ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
+.days{list-style:none;padding:0;margin:0;display:grid;gap:0;border-top:1px solid var(--line)}
+.day{display:grid;grid-template-columns:118px 1fr;gap:16px;padding:16px 8px;border-bottom:1px solid var(--line)}
+.day>div{min-width:0}
+.day.sim{background:var(--sim-soft)} .day.hoje{background:var(--accent-soft)}
+.date{font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
+.tag{display:block;font-family:var(--body);font-size:.85rem;font-weight:600;color:var(--muted)}
+.sim .tag{color:var(--sim)}
+.day dl{margin:0;display:grid;gap:6px}
+.day dl div{display:grid;grid-template-columns:96px 1fr;gap:8px}
+dt{font-weight:700;color:var(--accent);font-size:.95rem} dd{margin:0;min-width:0}
+label.done{display:inline-flex;gap:8px;align-items:center;margin-top:8px;cursor:pointer;font-weight:600}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--ok)}
+input:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (max-width:560px){.day{grid-template-columns:1fr;gap:8px}.day dl div{grid-template-columns:1fr;gap:0}h1{font-size:1.65rem}}
+</style>
+</head>
+<body style="margin:0">
+<nav style="max-width:820px;margin:0 auto;padding:16px 16px 0"><a href="./" style="color:var(--accent);font-weight:600">Início</a></nav>
+<div class="wrap">
+<header class="stack">
+  <h1>Plano de estudos: IFSP, Segurança do Trabalho, Matão</h1>
+  <p>Prova objetiva em <strong>domingo, 13/12/2026</strong> (data provável). São 18 dias inteiros de estudo, de 25/11 a 12/12, mais o restante do dia 24/11.</p>
+  <p>São 163 inscrições na lista preliminar para 1 vaga. Só os 8 mais bem colocados da ampla concorrência, e os empatados na última posição, vão para a aula. Fazer 50 pontos evita a eliminação, mas o que decide é a classificação.</p>
+</header>
+
+<section class="stack">
+  <h2>Onde estão os pontos</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Parte</th><th>Questões</th><th>Pontos</th><th>Horas por dia</th></tr></thead>
+    <tbody>
+      <tr><td>Específica (10 tópicos)</td><td>25</td><td>62,5</td><td>3 h</td></tr>
+      <tr><td>Legislação e pedagogia</td><td>15</td><td>37,5</td><td>3 h</td></tr>
+      <tr><td>Questões e correção de erros</td><td></td><td></td><td>2 h</td></tr>
+      <tr><td>Reforço, nos dias de 10 a 12 h</td><td></td><td></td><td>até 4 h</td></tr>
+    </tbody></table></div>
+  <p class="muted">Meta sugerida para os simulados: 28 acertos no primeiro, 31 no segundo e 34 no terceiro. A nota de corte é desconhecida.</p>
+</section>
+
+<section class="stack">
+  <h2>Como dividir o dia</h2>
+  <ul>
+    <li><strong>Dia de 8 h:</strong> 3 h de legislação ou pedagogia pela manhã, que é a parte em que precisa de mais reforço; 3 h do específico à tarde; e 2 h de questões.</li>
+    <li><strong>Dia de 12 h:</strong> o mesmo, mais 2 h relendo as NRs do dia e 2 h revisando o caderno de erros.</li>
+    <li><strong>Sempre:</strong> pausa de 10 minutos a cada 50, e 30 minutos para rever o assunto de ontem antes de começar.</li>
+    <li><strong>Sono:</strong> cortar o reforço antes de cortar o sono.</li>
+  </ul>
+</section>
+
+<section class="stack">
+  <h2>Dia a dia</h2>
+  <ol class="days" id="days"></ol>
+  <p class="muted">As marcações ficam guardadas só neste navegador.</p>
+</section>
+
+<section class="stack">
+  <h2>Aproveitar a formação em alimentos e química</h2>
+  <ul>
+    <li><strong>Agentes químicos, HAZOP e FMEA</strong> provavelmente serão familiares. Revisar rápido e treinar questões.</li>
+    <li><strong>Calor</strong> é o tema da aula: "Higiene ocupacional: avaliação da exposição ocupacional ao calor". Padarias, caldeiras, pasteurização e fornos dão exemplos próprios.</li>
+    <li><strong>Mais tempo</strong> para o que costuma ser novo: NR-10, NR-12, NR-33, NR-35, SESMT, CIPA, CLT e Lei 8.112.</li>
+  </ul>
+</section>
+
+<section class="stack">
+  <h2>Cuidados com o material</h2>
+  <ul>
+    <li>Ler as NRs no site do Ministério do Trabalho. A bibliografia sugerida inclui livros de NRs de 2003 e 2015.</li>
+    <li>NR-1: a nova redação do gerenciamento de riscos inclui os fatores psicossociais. As fontes consultadas indicam vigência desde o fim de maio de 2026; confirmar no texto oficial.</li>
+    <li>Calor: estudar juntos o Anexo 3 da NR-9, o Anexo 3 da NR-15 e a NHO 06. Conferir fórmulas e limites nos textos oficiais.</li>
+    <li>A legislação vale com as alterações até a publicação do edital (29/09/2026), e normas posteriores também podem ser usadas.</li>
+    <li>Não foi encontrado caderno anterior do IFSP para esta área. Usar questões de outros institutos federais, conferindo se a norma citada continua vigente.</li>
+  </ul>
+</section>
+
+<section class="stack">
+  <h2>Datas e dia da prova</h2>
+  <ul>
+    <li><strong>25 e 26/11:</strong> recurso contra a lista preliminar, se houver erro.</li>
+    <li><strong>01/12:</strong> homologação das inscrições. <strong>04/12:</strong> local de prova e Cartão Definitivo de Inscrição.</li>
+    <li>As provas serão na cidade de São Paulo e, se necessário, em cidades adjacentes. Reservar transporte e hospedagem assim que sair o local.</li>
+    <li>Levar documento original físico com foto, comprovantes de inscrição e de pagamento e caneta transparente de tinta preta. Documento digital não é aceito.</li>
+    <li>Chegar com 1 hora de antecedência e ficar no mínimo 90 minutos na sala. Calculadora e relógio são proibidos, então treinar as contas à mão.</li>
+    <li><strong>14/12:</strong> gabarito. <strong>15 e 16/12:</strong> recurso contra o gabarito.</li>
+  </ul>
+</section>
+
+<section class="stack">
+  <h2>Fontes</h2>
+  <ul>
+    <li><a href="https://concursopublico.ifsp.edu.br/editais/edital-1832026-docentes">Página oficial do Edital 183/2026</a></li>
+    <li><a href="https://concursopublico.ifsp.edu.br/sites/default/files/arquivos/comunicado-2-2026-conteudo-programatico.pdf">Comunicado 2: conteúdo programático</a></li>
+    <li><a href="https://concursopublico.ifsp.edu.br/sites/default/files/arquivos/comunicado-7-2026-cronograma-previsto-retificado.pdf">Comunicado 7: cronograma retificado</a></li>
+    <li><a href="https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho/ctpp-nrs/normas-regulamentadoras-nrs">Normas Regulamentadoras</a></li>
+    <li><a href="https://www.gov.br/fundacentro/pt-br/centrais-de-conteudo/biblioteca">Normas de Higiene Ocupacional (Fundacentro)</a></li>
+  </ul>
+</section>
+</div>
+<script>
+const D=[
+["2026-11-24","ter","Preparação","Conferir nome, vaga e dados na lista preliminar. Baixar as NRs e as leis.","Ler os 9 blocos de legislação só pelo índice.","Diagnóstico: 20 questões, sem consulta, para achar os pontos fracos."],
+["2026-11-25","qua","","Tópico 1: acidente, incidente e quase acidente; índices de frequência e gravidade; CAT; definições da NR-1.","Constituição: Administração Pública, Seções I e II.","20 questões de fundamentos, com cálculo de índices à mão."],
+["2026-11-26","qui","","Tópico 8: NR-1, gerenciamento de riscos, PGR, inventário e plano de ação; fatores psicossociais.","LDB, arts. 1º a 34.","20 questões de NR-1 e PGR."],
+["2026-11-27","sex","","Tópico 2: NR-9 e agentes físicos; calor (NR-9 Anexo 3, NR-15 Anexo 3 e NHO 06); ruído (NR-15 e NHO 01).","LDB, arts. 35 a 67.","20 questões de agentes físicos, com contas de IBUTG."],
+["2026-11-28","sáb","","Tópico 2: agentes químicos e biológicos, mapa de risco, NR-15 (anexos) e NR-7 (PCMSO).","Pedagogia 1 e 2: Saviani, Frigotto, Brandão.","20 questões de higiene ocupacional."],
+["2026-11-29","dom","Simulado 1","40 questões em 4 h: 25 específicas e 15 comuns.","Corrigir tudo e montar o caderno de erros.","Rever só o que errou. Encerrar mais cedo."],
+["2026-11-30","seg","","Tópico 3: APR, AAF, HAZOP e FMEA; inspeções; sinalização (NR-26, NBR 7195 e ISO 3864-1).","Lei 8.112, Títulos I e II.","20 questões de análise de riscos."],
+["2026-12-01","ter","Sai a homologação","Tópicos 4 e 9: NR-6 (EPI), EPC, NR-4 (SESMT) e NR-5 (CIPA e assédio). Treinar o dimensionamento.","Lei 8.112, Título III.","20 questões, com dimensionamento de SESMT e CIPA."],
+["2026-12-02","qua","","Tópico 5: NR-17, iluminação (NBR ISO/CIE 8995-1) e NR-24.","Lei 8.112, Títulos IV e V.","20 questões de ergonomia."],
+["2026-12-03","qui","","Tópico 6: NR-10 e NR-12.","Lei 11.892 inteira.","20 questões de eletricidade e máquinas."],
+["2026-12-04","sex","Sai o local de prova","Tópico 6: NR-33 e NR-35. Comparar permissões, treinamentos e responsabilidades.","Lei 12.772 e Decreto 1.171.","20 questões. Conferir o local e organizar a viagem."],
+["2026-12-05","sáb","","Tópico 6: insalubridade (NR-15) e periculosidade (NR-16).","Lei 8.429, capítulos I a III; Pedagogia 3: ensino e desenvolvimento humano.","20 questões de NR-15 e NR-16."],
+["2026-12-06","dom","Simulado 2","40 questões em 4 h, no mesmo horário em que pretende fazer a prova.","Corrigir e comparar com o primeiro.","Rever erros repetidos. Encerrar mais cedo."],
+["2026-12-07","seg","","Tópico 7: NR-23, classes de incêndio, extintores, brigada e primeiros socorros.","ECA: arts. 1º a 24, 53 a 58 e 131 a 140.","20 questões de incêndio e emergências."],
+["2026-12-08","ter","","Tópico 8: LTCAT, PPP e Permissão de Trabalho. Diferenciar de PGR e PCMSO.","Constituição: Ordem Social, capítulos III, IV e VII.","20 questões de documentação técnica."],
+["2026-12-09","qua","","Tópico 10: CLT, Capítulo V do Título II; relação com as NRs e com as normas da ABNT.","Lei 13.146 (títulos indicados); Pedagogia 4, 5 e 6: Luckesi, Veiga, Pinheiro.","20 questões de CLT e pedagogia."],
+["2026-12-10","qui","Simulado 3","40 questões em 4 h, sem calculadora e sem relógio.","Corrigir e listar os 10 pontos mais fracos.","Reler a norma de cada um desses 10 pontos."],
+["2026-12-11","sex","Revisão geral","Caderno de erros do específico e tabelas das NRs.","Leis: prazos, competências e penalidades.","40 questões mistas, sem marcar tempo."],
+["2026-12-12","sáb","Véspera","Revisão leve, de 3 a 4 h, só de resumos.","Fórmulas e quadros. Nada de assunto novo.","Separar documentos, caneta e trajeto. Dormir cedo."],
+["2026-12-13","dom","Prova objetiva","Chegar com 1 hora de antecedência.","40 questões, 4 horas. Conferir a folha de respostas.","Pode levar o caderno de questões, após 90 minutos."]
+];
+const el=document.getElementById("days");
+const n=new Date(),hoje=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
+let s={};try{s=JSON.parse(localStorage.getItem("plano-ifsp")||"{}")}catch(e){}
+D.forEach(([d,w,t,a,b,c])=>{
+  const li=document.createElement("li"),sim=t.startsWith("Simulado")||t==="Prova objetiva";
+  li.className="day"+(sim?" sim":"")+(d===hoje?" hoje":"");
+  const lab=sim||["Preparação","Revisão geral","Véspera"].includes(t)?["Fazer","Depois","Fechar"]:["Específico","Comum","Questões"];
+  li.innerHTML=`<div><span class="date">${d.slice(8)}/${d.slice(5,7)} ${w}</span><span class="tag">${d===hoje?"Hoje"+(t?", "+t.toLowerCase():""):t}</span></div><div><dl><div><dt>${lab[0]}</dt><dd>${a}</dd></div><div><dt>${lab[1]}</dt><dd>${b}</dd></div><div><dt>${lab[2]}</dt><dd>${c}</dd></div></dl><label class="done" for="c-${d}"><input type="checkbox" id="c-${d}"> Concluído</label></div>`;
+  const i=li.querySelector("input");i.checked=!!s[d];
+  i.addEventListener("change",()=>{s[d]=i.checked;try{localStorage.setItem("plano-ifsp",JSON.stringify(s))}catch(e){}});
+  el.appendChild(li);
+});
+</script>
+
+</body>
+</html>

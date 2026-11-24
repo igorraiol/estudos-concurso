@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Questões de Legislação e Pedagogia</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: barra de escolha no topo, uma questão por vez, placar por assunto abaixo. */
+:root{--bg:#f5f8f7;--surface:#fff;--fg:#16241f;--muted:#51625b;--line:#cfdbd6;--accent:#005f9e;--on-accent:#fff;--ok:#1f7a4d;--ok-soft:#dff1e7;--bad:#a8321f;--bad-soft:#f9e3de;
+--display:"Archivo","Arial Narrow",Arial,sans-serif;--body:"Source Sans 3","Segoe UI",Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101815;--surface:#18221e;--fg:#e6efeb;--muted:#9fb1a9;--line:#31403a;--accent:#7dbdf0;--on-accent:#0c1a24;--ok:#6fd0a0;--ok-soft:#153426;--bad:#f09a88;--bad-soft:#3d1f19;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101815;--surface:#18221e;--fg:#e6efeb;--muted:#9fb1a9;--line:#31403a;--accent:#7dbdf0;--on-accent:#0c1a24;--ok:#6fd0a0;--ok-soft:#153426;--bad:#f09a88;--bad-soft:#3d1f19;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:24px}
+.wrap>*{min-width:0}
+h1,h2{font-family:var(--display);line-height:1.2;margin:0;text-wrap:balance}h1{font-size:1.8rem}h2{font-size:1.2rem}
+p{margin:0;max-width:65ch}.muted{color:var(--muted)}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:end}
+.bar label{display:grid;gap:4px;font-weight:600;font-size:.95rem}
+select,button{font:inherit;padding:9px 14px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg);max-width:100%}
+button{cursor:pointer;font-weight:600}button.main{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+button:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#q{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;display:grid;gap:16px}
+#q>*{min-width:0}
+.meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;color:var(--muted);font-weight:600;font-size:.95rem}
+.enun{font-size:1.08rem;font-weight:600}
+.alts{display:grid;gap:8px}
+.alt{display:grid;grid-template-columns:24px 1fr;gap:10px;text-align:left;font-weight:400;width:100%}
+.alt b{font-family:var(--display)}
+.alt.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.alt.ok{background:var(--ok-soft);border-color:var(--ok)}.alt.bad{background:var(--bad-soft);border-color:var(--bad)}
+.alt:disabled{opacity:1}
+.com{border-top:1px solid var(--line);padding-top:12px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 12px 7px 0;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:.9rem}
+ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
+</style>
+</head>
+<body style="margin:0">
+<nav style="max-width:820px;margin:0 auto;padding:16px 16px 0"><a href="./" style="color:var(--accent);font-weight:600">Início</a></nav>
+<div class="wrap">
+<header style="display:grid;gap:8px">
+  <h1>Questões de Legislação e Pedagogia</h1>
+  <p>Treino para o concurso do IFSP. Na prova são 15 questões desta parte, com quatro alternativas, valendo 37,5 pontos. O edital não informa quantas são de cada assunto.</p>
+</header>
+<div class="bar">
+  <label for="tema">Assunto<select id="tema"></select></label>
+  <label for="modo">Modo<select id="modo"><option value="e">Estudo, com comentário na hora</option><option value="s">Simulado de 15 questões</option><option value="r">Refazer as que errei</option></select></label>
+  <button class="main" id="go">Começar</button>
+</div>
+<section id="q" aria-live="polite"></section>
+<section style="display:grid;gap:10px">
+  <h2>Desempenho por assunto</h2>
+  <div class="tw"><table><thead><tr><th>Assunto</th><th>Questões</th><th>Respondidas</th><th>Acertos</th></tr></thead><tbody id="placar"></tbody></table></div>
+  <p class="muted">Vale a última resposta de cada questão. O progresso fica guardado só neste navegador.</p>
+  <div><button id="zera">Apagar meu progresso</button></div>
+</section>
+<section style="display:grid;gap:10px">
+  <h2>Mudanças recentes que material antigo erra</h2>
+  <ul>
+    <li><strong>Acumulação (CF, art. 37, XVI, b):</strong> agora é um cargo de professor com outro de qualquer natureza (EC 138/2025).</li>
+    <li><strong>Rede Federal (Lei 11.892):</strong> os CEFETs saíram da lista do art. 1º (Lei 15.521, de 24/09/2026).</li>
+    <li><strong>Reitor (Lei 11.892, art. 12):</strong> nova redação em 2026 (Lei 15.367).</li>
+    <li><strong>Carreira EBTT (Lei 12.772):</strong> classes A, B, C e Titular, com ingresso no primeiro nível da classe inicial (Lei 15.141/2025).</li>
+    <li><strong>ECA, art. 4º:</strong> inclui o direito à natureza (Lei 15.512/2026) e a assistência afetiva (Lei 15.240/2025). O art. 56 ganhou negligência, abuso ou abandono.</li>
+    <li><strong>LDB, art. 12, VIII:</strong> a escola também notifica ao Conselho Tutelar casos de violência com alunos (Lei 15.231/2025).</li>
+    <li><strong>Improbidade (Lei 8.429):</strong> só com dolo (Lei 14.230/2021).</li>
+  </ul>
+</section>
+<section style="display:grid;gap:10px">
+  <h2>De onde vieram</h2>
+  <p>Questões inéditas. Os artigos foram conferidos em 24/11/2026 nos textos atualizados da Câmara dos Deputados e do Planalto. Confira a vigência das leis de 2026 no texto oficial.</p>
+  <p>As de Pedagogia foram escritas a partir do programa e das ideias conhecidas dos autores indicados, sem consulta aos livros. Use-as para treinar e confirme na obra.</p>
+</section>
+</div>
+<script>
+// [assunto, enunciado, [correta, errada, errada, errada], comentário]
+const B=[
+["Constituição","Segundo o art. 37, XVI, da Constituição, com a redação da EC 138/2025, é permitida, havendo compatibilidade de horários, a acumulação remunerada de:",["um cargo de professor com outro de qualquer natureza","dois cargos técnicos ou científicos quaisquer","três cargos de professor","dois cargos administrativos, se em entes diferentes"],"Art. 37, XVI, b. A redação antiga falava em professor com cargo técnico ou científico. Continuam permitidos dois cargos de professor e dois cargos privativos de profissionais de saúde com profissões regulamentadas."],
+["Constituição","O servidor nomeado para cargo efetivo em virtude de concurso público adquire estabilidade após:",["três anos de efetivo exercício, com avaliação especial de desempenho obrigatória","dois anos de efetivo exercício, sem necessidade de avaliação","cinco anos de efetivo exercício","a publicação da nomeação"],"Art. 41, caput e § 4º. O texto da Lei 8.112 ainda traz dois anos, mas prevalece a Constituição (EC 19/1998)."],
+["Constituição","O servidor estável NÃO perderá o cargo por:",["simples decisão da chefia imediata","sentença judicial transitada em julgado","processo administrativo com ampla defesa","avaliação periódica de desempenho, na forma de lei complementar, com ampla defesa"],"Art. 41, § 1º, lista as três hipóteses. Decisão unilateral da chefia não é uma delas."],
+["Constituição","A educação, direito de todos e dever do Estado e da família, visa, conforme o art. 205:",["ao pleno desenvolvimento da pessoa, ao preparo para a cidadania e à qualificação para o trabalho","exclusivamente à formação para o mercado de trabalho","à formação religiosa e moral do cidadão","ao ingresso no ensino superior"],"Art. 205. São três finalidades, e a colaboração da sociedade aparece no mesmo artigo."],
+["Constituição","A educação básica obrigatória e gratuita abrange a faixa de:",["4 a 17 anos, inclusive com oferta gratuita a quem não teve acesso na idade própria","6 a 14 anos, apenas","0 a 17 anos","7 a 18 anos"],"Art. 208, I. A educação infantil vai até os 5 anos, mas a obrigatoriedade começa aos 4."],
+["Constituição","Sobre a aplicação mínima anual da receita resultante de impostos em educação, a Constituição prevê:",["18% para a União e 25% para Estados, Distrito Federal e Municípios","25% para a União e 18% para os demais entes","20% para todos os entes","15% para a União e 25% para os Municípios"],"Art. 212, caput. Macete: a União aplica o percentual menor."],
+["Constituição","Na organização dos sistemas de ensino, os Municípios atuarão prioritariamente:",["no ensino fundamental e na educação infantil","no ensino médio","no ensino fundamental e médio","na educação superior"],"Art. 211, § 2º. Estados e Distrito Federal atuam prioritariamente no ensino fundamental e médio (§ 3º)."],
+["Constituição","As pessoas jurídicas de direito público respondem pelos danos que seus agentes, nessa qualidade, causarem a terceiros:",["assegurado o direito de regresso contra o responsável nos casos de dolo ou culpa","somente quando houver dolo do agente","sem direito de regresso","somente se o agente for estável"],"Art. 37, § 6º. A responsabilidade perante o terceiro não depende de dolo, que importa para o regresso."],
+
+["ECA","Para os efeitos do ECA, considera-se criança a pessoa:",["até doze anos de idade incompletos","até doze anos completos","até dez anos incompletos","até quatorze anos incompletos"],"Art. 2º. Adolescente é quem tem entre doze e dezoito anos."],
+["ECA","O Conselho Tutelar é órgão:",["permanente e autônomo, não jurisdicional","temporário e vinculado ao Poder Judiciário","jurisdicional, subordinado ao Ministério Público","consultivo, vinculado à escola"],"Art. 131. A pegadinha comum é chamá-lo de jurisdicional."],
+["ECA","Cada Conselho Tutelar é composto por:",["5 membros, escolhidos pela população local, com mandato de 4 anos e recondução por novos processos de escolha","5 membros nomeados pelo prefeito, com mandato de 2 anos","3 membros, escolhidos pelo juiz, sem recondução","7 membros, escolhidos pela população, com mandato de 4 anos sem recondução"],"Art. 132. A recondução depende de novo processo de escolha, sem limite de uma vez."],
+["ECA","São requisitos para a candidatura a membro do Conselho Tutelar:",["idoneidade moral reconhecida, idade superior a 21 anos e residência no município","idade superior a 18 anos e curso superior","idoneidade moral e formação em Direito","idade superior a 25 anos e residência no estado"],"Art. 133."],
+["ECA","Os dirigentes de estabelecimentos de ensino fundamental comunicarão ao Conselho Tutelar, entre outros, os casos de:",["reiteração de faltas injustificadas e evasão escolar, esgotados os recursos escolares","uma única falta injustificada","nota abaixo da média em qualquer componente","transferência de escola"],"Art. 56. Também maus-tratos, elevados níveis de repetência e, desde 2025, negligência, abuso ou abandono."],
+["ECA","É direito da criança e do adolescente, previsto no art. 53:",["contestar critérios avaliativos, podendo recorrer às instâncias escolares superiores","escolher os professores de cada disciplina","ser dispensado da avaliação por decisão própria","cursar a escola sem matrícula formal"],"Art. 53, III. O mesmo artigo assegura respeito dos educadores e participação em entidades estudantis."],
+["ECA","Segundo o art. 18-A, humilhar, ameaçar gravemente ou ridicularizar criança ou adolescente caracteriza:",["tratamento cruel ou degradante","castigo físico","medida disciplinar admitida à escola","infração apenas se houver lesão"],"Art. 18-A. Castigo físico é o uso da força física que resulte em sofrimento físico ou lesão."],
+
+["Lei 8.112","O prazo para a posse, contado da publicação do ato de provimento, é de:",["30 dias","15 dias","60 dias","10 dias"],"Art. 13, § 1º. Sem posse nesse prazo, o ato é tornado sem efeito (§ 6º)."],
+["Lei 8.112","O servidor empossado deve entrar em exercício em:",["15 dias, contados da posse","30 dias, contados da posse","15 dias, contados da nomeação","5 dias, contados da posse"],"Art. 15, § 1º. Se não entrar em exercício, é exonerado (§ 2º)."],
+["Lei 8.112","O retorno do servidor estável ao cargo, quando invalidada a sua demissão por decisão administrativa ou judicial, é chamado de:",["reintegração","reversão","recondução","readaptação"],"Art. 28. Reversão é a volta do aposentado, recondução é a volta ao cargo anterior e readaptação decorre de limitação física ou mental."],
+["Lei 8.112","A inabilitação em estágio probatório relativo a outro cargo pode levar o servidor estável à:",["recondução","reversão","reintegração","redistribuição"],"Art. 29, I. A recondução também ocorre quando há reintegração do anterior ocupante."],
+["Lei 8.112","O deslocamento do servidor, a pedido ou de ofício, no âmbito do mesmo quadro, com ou sem mudança de sede, é:",["remoção","redistribuição","promoção","aproveitamento"],"Art. 36. Na redistribuição, o que se desloca é o cargo, para outro órgão ou entidade do mesmo Poder (art. 37)."],
+["Lei 8.112","A suspensão disciplinar não poderá exceder:",["90 dias","30 dias","60 dias","120 dias"],"Art. 130. Já a recusa injustificada a inspeção médica gera suspensão de até 15 dias (§ 1º)."],
+["Lei 8.112","Configura abandono de cargo a ausência intencional ao serviço por mais de:",["30 dias consecutivos","60 dias interpolados em doze meses","15 dias consecutivos","45 dias consecutivos"],"Art. 138. Sessenta dias interpolados, sem causa justificada, em doze meses, é inassiduidade habitual (art. 139)."],
+["Lei 8.112","A ação disciplinar prescreve, quanto às infrações puníveis com demissão, suspensão e advertência, respectivamente, em:",["5 anos, 2 anos e 180 dias","5 anos, 3 anos e 1 ano","10 anos, 5 anos e 2 anos","2 anos, 180 dias e 30 dias"],"Art. 142. O prazo corre da data em que o fato se tornou conhecido (§ 1º)."],
+["Lei 8.112","Da sindicância poderá resultar, entre outras consequências:",["advertência ou suspensão de até 30 dias","demissão","suspensão de até 90 dias","cassação de aposentadoria"],"Art. 145, II. Para penalidade mais grave, é preciso processo disciplinar."],
+["Lei 8.112","O processo disciplinar será conduzido por comissão composta de:",["três servidores estáveis","dois servidores estáveis","três servidores, estáveis ou não","cinco servidores estáveis"],"Art. 149. Dois servidores estáveis compõem a comissão do rito sumário de acumulação ilegal (art. 133, I)."],
+["Lei 8.112","É dever do servidor cumprir as ordens superiores:",["exceto quando manifestamente ilegais","sempre, sem exceção","somente se escritas","exceto quando discordar do mérito"],"Art. 116, IV."],
+
+["Lei 8.429","Com a redação da Lei 14.230/2021, os atos de improbidade administrativa exigem:",["conduta dolosa","culpa leve","culpa grave ou dolo","apenas a voluntariedade do agente"],"Art. 1º, §§ 1º e 2º. O dolo é a vontade livre e consciente de alcançar o resultado ilícito, e a voluntariedade não basta."],
+["Lei 8.429","Auferir, com dolo, vantagem patrimonial indevida em razão do cargo é ato de improbidade que:",["importa enriquecimento ilícito","causa lesão ao erário, apenas","atenta contra os princípios, apenas","não é alcançado pela lei"],"Art. 9º. Lesão ao erário está no art. 10 e princípios, no art. 11."],
+["Lei 8.429","A suspensão dos direitos políticos pode chegar a 14 anos na hipótese de:",["enriquecimento ilícito","lesão ao erário","violação de princípios","qualquer ato de improbidade"],"Art. 12, I. Lesão ao erário: até 12 anos (II). Violação de princípios não traz essa sanção (III)."],
+["Lei 8.429","Nos atos que atentam contra os princípios da administração (art. 11), a multa civil pode ser de até:",["24 vezes a remuneração percebida pelo agente","100 vezes a remuneração","o valor do acréscimo patrimonial","o dobro do dano"],"Art. 12, III. Também há proibição de contratar com o poder público por até 4 anos."],
+["Lei 8.429","Para a lei, é agente público:",["quem exerce, ainda que transitoriamente ou sem remuneração, função nas entidades referidas no art. 1º","somente o servidor estável","somente quem recebe remuneração pública","somente o ocupante de cargo eletivo"],"Art. 2º. A lei é ampla quanto ao vínculo."],
+
+["LDB","A carga horária mínima anual, em no mínimo 200 dias de efetivo trabalho escolar, é de:",["800 horas no ensino fundamental e 1.000 horas no ensino médio","800 horas em ambos","1.000 horas em ambos","1.000 horas no fundamental e 800 no médio"],"Art. 24, I, com redação da Lei 14.945/2024."],
+["LDB","Na verificação do rendimento escolar, a avaliação será:",["contínua e cumulativa, com prevalência dos aspectos qualitativos sobre os quantitativos","baseada apenas em provas finais","somente quantitativa","definida livremente pelo professor, sem critérios"],"Art. 24, V, a. Os resultados ao longo do período prevalecem sobre os de eventuais provas finais."],
+["LDB","A frequência mínima exigida para aprovação, nos níveis fundamental e médio, é de:",["75% do total de horas letivas","70% do total de dias letivos","80% do total de horas letivas","75% por componente curricular"],"Art. 24, VI. O cálculo é sobre o total de horas letivas."],
+["LDB","É incumbência dos docentes, e não do estabelecimento de ensino:",["zelar pela aprendizagem dos alunos","administrar seu pessoal e seus recursos materiais e financeiros","velar pelo cumprimento do plano de trabalho de cada docente","informar pais e responsáveis sobre a frequência dos alunos"],"Art. 13, III. As demais estão no art. 12, que trata dos estabelecimentos."],
+["LDB","A escola deve notificar ao Conselho Tutelar a relação dos alunos com quantidade de faltas acima de:",["30% do percentual permitido em lei","50% do percentual permitido em lei","25% das aulas do ano","75% das aulas do bimestre"],"Art. 12, VIII, a. É 30% do percentual permitido, e não 30% das aulas."],
+["LDB","A educação profissional técnica de nível médio articulada, na forma integrada, caracteriza-se por:",["matrícula única, na mesma instituição, para quem já concluiu o ensino fundamental","matrículas distintas para cada curso","oferta apenas a quem já concluiu o ensino médio","oferta obrigatória em instituições diferentes"],"Art. 36-C, I. Matrículas distintas são da forma concomitante, e quem já concluiu o médio faz a subsequente (art. 36-B, II)."],
+["LDB","O estudo da história e cultura afro-brasileira e indígena é:",["obrigatório no ensino fundamental e médio, público e privado, em todo o currículo","facultativo na rede privada","obrigatório só na disciplina de História","obrigatório apenas na rede pública"],"Art. 26-A, caput e § 2º. Há ênfase em educação artística, literatura e história brasileiras."],
+["LDB","A educação escolar compõe-se de:",["educação básica e educação superior","educação infantil, fundamental e superior","ensino fundamental, médio e profissional","educação básica, profissional e especial"],"Art. 21. Educação especial e educação profissional não são níveis dessa divisão."],
+["LDB","A educação profissional e tecnológica abrange os cursos de:",["formação inicial e continuada, técnica de nível médio e tecnológica de graduação e pós-graduação","técnica de nível médio, apenas","formação inicial e continuada, apenas","bacharelado e licenciatura, apenas"],"Art. 39, § 2º."],
+
+["Lei 11.892","Cada Instituto Federal deve garantir, por exercício, no mínimo:",["50% das vagas para a educação técnica de nível médio e 20% para licenciaturas e formação pedagógica","20% para cursos técnicos e 50% para licenciaturas","50% para cursos superiores de tecnologia","30% para cursos técnicos e 30% para licenciaturas"],"Art. 8º, com referência ao art. 7º, I e VI, b."],
+["Lei 11.892","Os Institutos Federais devem ministrar educação profissional técnica de nível médio prioritariamente na forma de cursos:",["integrados","subsequentes","concomitantes","a distância"],"Art. 7º, I, para concluintes do ensino fundamental e público da EJA."],
+["Lei 11.892","O Conselho Superior do Instituto Federal tem caráter:",["consultivo e deliberativo","apenas consultivo","apenas executivo","apenas fiscalizador"],"Art. 10, § 3º. O Colégio de Dirigentes é consultivo (§ 2º)."],
+["Lei 11.892","A reitoria dos Institutos Federais é composta por:",["1 Reitor e 5 Pró-Reitores","1 Reitor e 3 Pró-Reitores","1 Reitor e os Diretores-Gerais","2 Reitores e 5 Pró-Reitores"],"Art. 11. É o órgão executivo."],
+["Lei 11.892","Na consulta para Reitor, o peso da manifestação de docentes, técnico-administrativos e estudantes é de:",["1/3 para cada segmento","70%, 15% e 15%","50%, 25% e 25%","40%, 30% e 30%"],"Art. 12. Mandato de 4 anos, permitida uma recondução."],
+["Lei 11.892","Após a Lei 15.521/2026, integram a Rede Federal de Educação Profissional, Científica e Tecnológica:",["Institutos Federais, UTFPR, Escolas Técnicas Vinculadas às Universidades Federais e Colégio Pedro II","Institutos Federais e CEFETs, apenas","todas as universidades federais","Institutos Federais, UTFPR e Sistema S"],"Art. 1º. O inciso que tratava dos CEFETs foi revogado em 24/09/2026. Confira a vigência no texto oficial."],
+
+["Lei 12.772","O ingresso na carreira do Magistério EBTT ocorre:",["no primeiro nível da classe inicial, por concurso de provas ou de provas e títulos","no nível correspondente à titulação do candidato","na Classe B, para mestres","na Classe Titular, para doutores"],"Art. 10. A titulação influencia a retribuição, e não o nível de ingresso. Exige-se diploma de graduação (§ 1º)."],
+["Lei 12.772","A progressão funcional no EBTT exige, cumulativamente:",["24 meses de efetivo exercício em cada nível e aprovação em avaliação de desempenho individual","36 meses em cada nível e título de mestre","12 meses em cada nível, apenas","18 meses em cada nível e título de doutor"],"Art. 14, § 2º. Progressão ocorre dentro da classe; promoção é a mudança de classe."],
+["Lei 12.772","Para a promoção à Classe B do EBTT, o interstício mínimo no último nível da classe anterior é de:",["36 meses","24 meses","18 meses","48 meses"],"Art. 14, § 3º, I (Lei 15.141/2025). Para a Classe C são 24 meses, e para Titular, 24 meses com doutorado e outras condições."],
+["Lei 12.772","Para fins de Retribuição por Titulação no EBTT, a titulação de mestre somada ao RSC-III equivale a:",["doutorado","mestrado","especialização","pós-doutorado"],"Art. 18, § 2º, III. Graduação com RSC-I equivale a especialização, e lato sensu com RSC-II, a mestrado."],
+["Lei 12.772","O regime de 40 horas com dedicação exclusiva:",["impede outra atividade remunerada, pública ou privada, com as exceções da própria lei","permite qualquer atividade privada fora do horário","impede receber direitos autorais","dispensa atividades de pesquisa e extensão"],"Art. 20, § 2º, e exceções do art. 21, como direitos autorais, bolsas e colaboração esporádica."],
+["Lei 12.772","A Comissão de Avaliação de Desempenho do docente em estágio probatório deve ser composta por:",["docentes estáveis","docentes e discentes em igual número","servidores de qualquer órgão federal","membros externos, em sua maioria"],"Art. 23, parágrafo único. A avaliação pelos discentes é um dos fatores considerados (art. 24, VI)."],
+
+["LBI 13.146","Pessoa com deficiência é aquela que tem impedimento:",["de longo prazo, que, em interação com barreiras, pode obstruir sua participação plena e efetiva na sociedade","de qualquer duração, atestado por um médico","exclusivamente físico e permanente","que a torne incapaz para o trabalho"],"Art. 2º. A deficiência resulta da interação com as barreiras."],
+["LBI 13.146","A avaliação da deficiência, quando necessária, será:",["biopsicossocial, por equipe multiprofissional e interdisciplinar","exclusivamente médica","feita pela escola, sem outros profissionais","feita por autodeclaração, sempre"],"Art. 2º, § 1º."],
+["LBI 13.146","Produtos, ambientes, programas e serviços concebidos para uso por todas as pessoas, sem necessidade de adaptação, correspondem a:",["desenho universal","tecnologia assistiva","adaptação razoável","comunicação alternativa"],"Art. 3º, II. Tecnologia assistiva promove a funcionalidade da pessoa com deficiência (III)."],
+["LBI 13.146","Atitudes que prejudicam a participação social da pessoa com deficiência em igualdade de condições são barreiras:",["atitudinais","urbanísticas","tecnológicas","arquitetônicas"],"Art. 3º, IV, e."],
+["LBI 13.146","Em relação às adaptações exigidas pela lei, a instituição privada de ensino:",["não pode cobrar valores adicionais do estudante com deficiência","pode cobrar taxa proporcional ao custo","pode recusar a matrícula se não houver verba","está dispensada do atendimento"],"Art. 28, § 1º."],
+["LBI 13.146","A oferta de educação bilíngue prevista na LBI considera:",["Libras como primeira língua e português escrito como segunda","português como primeira língua e Libras como segunda","Libras e inglês","Braille como primeira língua"],"Art. 28, IV."],
+
+["Decreto 1.171","A pena aplicável ao servidor pela Comissão de Ética é a de:",["censura","advertência","suspensão","demissão"],"Inciso XXII. Advertência, suspensão e demissão são penalidades da Lei 8.112."],
+["Decreto 1.171","Segundo o Código de Ética, a função pública:",["integra-se à vida particular do servidor, cuja conduta privada pode influir em seu conceito funcional","não tem relação com a vida particular","só exige ética durante o expediente","limita-se ao cumprimento da legalidade"],"Regra deontológica VI. Pela regra II, o servidor decide também entre o honesto e o desonesto."],
+["Decreto 1.171","É vedado ao servidor público:",["ser conivente, por espírito de solidariedade, com erro ou infração ao Código","representar contra comprometimento indevido da estrutura","comunicar fato contrário ao interesse público","facilitar a fiscalização de seus atos"],"Inciso XV, c. As outras três condutas são deveres (XIV, h, m e s)."],
+["Decreto 1.171","Deixar o usuário à espera de solução, permitindo a formação de longas filas, caracteriza:",["atitude contra a ética, com dano moral ao usuário","apenas falha administrativa","conduta permitida em caso de falta de pessoal","crime de prevaricação, sempre"],"Regra deontológica X."],
+
+["Pedagogia 1: escola e papel do professor","Em Escola e democracia, Saviani reúne pedagogia tradicional, escola nova e pedagogia tecnicista no grupo das teorias:",["não críticas","crítico-reprodutivistas","histórico-críticas","pós-críticas"],"Para essas teorias, a educação teria autonomia diante da sociedade e corrigiria a marginalidade."],
+["Pedagogia 1: escola e papel do professor","As teorias que explicam a escola como reprodutora das desigualdades, como a da violência simbólica, são chamadas por Saviani de:",["crítico-reprodutivistas","não críticas","escolanovistas","tecnicistas"],"Incluem violência simbólica (Bourdieu e Passeron), aparelho ideológico de Estado (Althusser) e escola dualista (Baudelot e Establet)."],
+["Pedagogia 1: escola e papel do professor","Na pedagogia tecnicista, o elemento central do processo é:",["a organização racional dos meios","o professor","o aluno e seus interesses","o conteúdo clássico"],"Na tradicional, o centro é o professor, e na escola nova, o aluno."],
+["Pedagogia 2: trabalho e formação humana","Os passos propostos por Saviani partem e chegam à:",["prática social","avaliação somativa","memorização","instrução programada"],"Prática social, problematização, instrumentalização, catarse e prática social."],
+["Pedagogia 2: trabalho e formação humana","No método de Saviani, a apropriação dos instrumentos teóricos e práticos necessários para enfrentar os problemas é a:",["instrumentalização","catarse","problematização","prática social inicial"],"A catarse é a incorporação desses instrumentos como elementos ativos de transformação social."],
+["Pedagogia 2: trabalho e formação humana","O trabalho como princípio educativo, na perspectiva do ensino médio integrado, significa:",["compreender o trabalho como dimensão da formação humana, unindo ciência, cultura e técnica","treinar o aluno para uma tarefa do mercado","substituir a formação geral por prática profissional","oferecer emprego ao estudante durante o curso"],"Perspectiva associada à formação omnilateral e à politecnia, discutida por Frigotto e outros."],
+["Pedagogia 2: trabalho e formação humana","A formação omnilateral opõe-se à:",["formação fragmentada, que separa trabalho manual e intelectual","formação científica","formação ética e política","formação cultural"],"Omnilateral é o desenvolvimento de todas as dimensões humanas."],
+["Pedagogia 3: ensino e desenvolvimento","Para Vygotsky, a distância entre o que a pessoa faz sozinha e o que faz com ajuda de alguém mais experiente é a:",["zona de desenvolvimento proximal","zona de desenvolvimento real","equilibração majorante","fase operatória"],"É nessa zona que a intervenção pedagógica atua com mais proveito."],
+["Pedagogia 3: ensino e desenvolvimento","Na teoria de Piaget, modificar os esquemas existentes para dar conta de um elemento novo é:",["acomodação","assimilação","internalização","mediação"],"Assimilar é incorporar o novo aos esquemas já existentes. A equilibração articula os dois processos."],
+["Pedagogia 3: ensino e desenvolvimento","Wallon destaca, no desenvolvimento da pessoa:",["a integração entre afetividade, motricidade e cognição","a inteligência isolada da emoção","apenas o condicionamento","apenas a maturação biológica"],"Para ele, emoção e inteligência se alternam e se influenciam."],
+["Pedagogia 3: ensino e desenvolvimento","Em La Taille, a passagem, em Piaget, do respeito à regra por autoridade à regra por acordo mútuo corresponde a:",["heteronomia para autonomia","autonomia para anomia","assimilação para acomodação","pensamento formal para concreto"],"A cooperação entre iguais favorece a autonomia moral."],
+["Pedagogia 4: planejamento e avaliação","Para Luckesi, a avaliação da aprendizagem deve ser, antes de tudo:",["diagnóstica, para orientar a tomada de decisão e a melhoria da aprendizagem","classificatória, para ordenar os alunos","punitiva, para manter a disciplina","burocrática, para registrar notas"],"O autor critica a pedagogia do exame e distingue avaliar de verificar."],
+["Pedagogia 4: planejamento e avaliação","Na distinção de Luckesi, a verificação:",["encerra-se na obtenção do dado, e a avaliação exige decisão sobre o que fazer com ele","é mais completa que a avaliação","é sinônimo de avaliação","só ocorre no fim do curso"],"Avaliar implica posicionamento e ação."],
+["Pedagogia 4: planejamento e avaliação","No planejamento da aula, a coerência esperada é entre:",["objetivos, conteúdos, métodos, recursos e avaliação","conteúdo e tempo, apenas","recursos e disciplina, apenas","avaliação e nota final, apenas"],"O plano de aula pedido na prova didática do IFSP segue essa lógica."],
+["Pedagogia 4: planejamento e avaliação","O professor que aplica uma prova, identifica dificuldades comuns e replaneja a aula seguinte usa a avaliação com função:",["formativa","somativa","seletiva","certificadora"],"A avaliação formativa ocorre durante o processo e o reorienta."],
+["Pedagogia 5: direitos humanos e gênero","Diante de apelidos homofóbicos contra um estudante, a atitude coerente com a educação em direitos humanos é:",["intervir, acolher quem sofreu e trabalhar o tema com a turma de modo educativo","ignorar, por ser brincadeira","pedir que o estudante mude de comportamento","transferir o estudante ofendido"],"A escola deve enfrentar a discriminação e não culpar quem a sofre."],
+["Pedagogia 5: direitos humanos e gênero","A noção de gênero, nos estudos educacionais, refere-se:",["à construção social e cultural de papéis e expectativas sobre masculino e feminino","apenas às características biológicas","somente à orientação afetiva e sexual","ao registro civil, exclusivamente"],"Gênero, sexo biológico e orientação sexual são conceitos distintos."],
+["Pedagogia 5: direitos humanos e gênero","A educação popular, na tradição discutida por Brandão, valoriza:",["o saber das classes populares e a participação política na construção do conhecimento","a transmissão unilateral do saber erudito","a neutralidade política do ensino","apenas a alfabetização técnica"],"Tem diálogo com Paulo Freire e com os movimentos sociais."],
+["Pedagogia 6: relações étnico-raciais","Uma prática antirracista na escola:",["inclui no currículo, ao longo do ano, saberes e autores negros e enfrenta o racismo no cotidiano","restringe o tema ao dia 20 de novembro","trata todos como iguais e evita falar de raça","deixa o assunto só para História"],"Ações pontuais não bastam, e o silêncio sobre raça tende a preservar desigualdades."],
+["Pedagogia 6: relações étnico-raciais","O mito da democracia racial é criticado porque:",["encobre as desigualdades raciais ao supor convivência harmoniosa","comprova a inexistência de racismo no Brasil","defende cotas raciais","é previsto na Constituição"],"Reconhecer o racismo é condição para enfrentá-lo na escola."],
+["Pedagogia 6: relações étnico-raciais","A Lei 10.639/2003 incluiu na LDB a obrigatoriedade do ensino de história e cultura afro-brasileira; em 2008, outra lei acrescentou:",["a história e cultura indígena","a educação ambiental","a educação financeira","a história da Europa"],"Lei 11.645/2008, que deu a redação atual do art. 26-A."]
+];
+const $=i=>document.getElementById(i),L="ABCD";
+let P={};try{P=JSON.parse(localStorage.getItem("q-ifsp")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("q-ifsp",JSON.stringify(P))}catch(e){}};
+const T=[...new Set(B.map(x=>x[0]))],ehPed=t=>t.startsWith("Pedagogia");
+const opt=(v,t)=>{const o=document.createElement("option");o.value=v;o.textContent=t;$("tema").appendChild(o)};
+opt("*","Tudo ("+B.length+")");
+opt("leg","Só Legislação ("+B.filter(x=>!ehPed(x[0])).length+")");
+opt("ped","Só Pedagogia ("+B.filter(x=>ehPed(x[0])).length+")");
+T.forEach(t=>opt(t,t+" ("+B.filter(x=>x[0]===t).length+")"));
+const mix=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+let fila=[],pos=0,sim=false,ac=0,resp=[];
+function pool(){const t=$("tema").value;return B.map((x,i)=>i).filter(i=>t==="*"||(t==="leg"&&!ehPed(B[i][0]))||(t==="ped"&&ehPed(B[i][0]))||B[i][0]===t)}
+function start(){
+  const m=$("modo").value;sim=m==="s";let p=pool();
+  if(m==="r")p=p.filter(i=>P[i]===0);
+  if(sim&&$("tema").value==="*"){p=mix([...mix(p.filter(i=>!ehPed(B[i][0]))).slice(0,9),...mix(p.filter(i=>ehPed(B[i][0]))).slice(0,6)])}
+  else{p=mix(p);if(sim)p=p.slice(0,15)}
+  fila=p.map(i=>({i,o:mix([0,1,2,3])}));pos=0;ac=0;resp=[];show();
+}
+function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e}
+function head(box,a,b){const m=el("div","meta");m.append(el("span","",a),el("span","",b));box.appendChild(m)}
+function show(){
+  const box=$("q");box.replaceChildren();
+  if(!fila.length){box.appendChild(el("p","","Não há questões nesta seleção. Escolha outro assunto ou modo."));return}
+  if(pos>=fila.length)return fim(box);
+  const {i,o}=fila[pos],[t,en,al,co]=B[i];
+  head(box,t,"Questão "+(pos+1)+" de "+fila.length);
+  box.appendChild(el("p","enun",en));
+  const w=el("div","alts"),bs=[];
+  const next=el("button","main",pos+1<fila.length?"Próxima":"Ver resultado");next.disabled=true;
+  let esc=null;
+  o.forEach((k,n)=>{const b=el("button","alt");b.append(el("b","",L[n]),el("span","",al[k]));b.onclick=()=>{
+    esc=k;bs.forEach(x=>x.classList.remove("sel"));b.classList.add("sel");next.disabled=false;
+    if(!sim){bs.forEach((x,q)=>{x.disabled=true;if(o[q]===0)x.classList.add("ok");else if(o[q]===k)x.classList.add("bad")});
+      const c=el("p","com",(k===0?"Certo. ":"Errado. ")+co);box.insertBefore(c,next);next.focus()}
+  };bs.push(b);w.appendChild(b)});
+  next.onclick=()=>{const ok=esc===0?1:0;ac+=ok;P[i]=ok;resp.push(esc);save();placar();pos++;show()};
+  box.append(w,next);
+}
+function fim(box){
+  head(box,"Resultado",ac+" de "+fila.length+" acertos");
+  box.appendChild(el("p","enun",Math.round(100*ac/fila.length)+"% de acerto"+(sim&&fila.length===15?", o que daria "+(ac*2.5).toLocaleString("pt-BR")+" de 37,5 pontos":"")+"."));
+  const er=fila.map((f,n)=>[f,n]).filter(([f,n])=>resp[n]!==0);
+  if(er.length)box.appendChild(el("h2","","Para rever"));
+  er.forEach(([f,n])=>{const [t,en,al,co]=B[f.i],d=el("div","com");d.append(el("p","enun",en),el("p","","Sua resposta: "+al[resp[n]]+"."),el("p","","Correta: "+al[0]+"."),el("p","muted",co));box.appendChild(d)});
+  const b=el("button","main","Começar de novo");b.onclick=start;box.appendChild(b);
+}
+function placar(){
+  const tb=$("placar");tb.replaceChildren();
+  T.forEach(t=>{const ids=B.map((x,i)=>i).filter(i=>B[i][0]===t),r=ids.filter(i=>i in P),tr=document.createElement("tr");
+    [t,ids.length,r.length,r.length?r.filter(i=>P[i]).length:"-"].forEach(v=>tr.appendChild(el("td","",v)));tb.appendChild(tr)});
+}
+let conf=false;
+$("zera").onclick=()=>{if(!conf){conf=true;$("zera").textContent="Clique de novo para confirmar";return}conf=false;P={};save();placar();$("zera").textContent="Progresso apagado"};
+$("go").onclick=start;placar();start();
+</script>
+
+</body>
+</html>
