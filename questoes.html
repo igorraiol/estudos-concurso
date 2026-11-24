@@ -48,16 +48,32 @@ ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
   <h1>Questões de Legislação e Pedagogia</h1>
   <p>Treino para o concurso do IFSP. Na prova são 15 questões desta parte, com quatro alternativas, valendo 37,5 pontos. O edital não informa quantas são de cada assunto.</p>
 </header>
+<p id="recebido" role="status" hidden style="background:var(--ok-soft);border:1px solid var(--ok);border-radius:8px;padding:12px 16px;max-width:none"></p>
 <div class="bar">
   <label for="tema">Assunto<select id="tema"></select></label>
   <label for="modo">Modo<select id="modo"><option value="e">Estudo, com comentário na hora</option><option value="s">Simulado de 15 questões</option><option value="r">Refazer as que errei</option></select></label>
   <button class="main" id="go">Começar</button>
+  <button id="re" hidden>Recomeçar</button>
 </div>
 <section id="q" aria-live="polite"></section>
 <section style="display:grid;gap:10px">
   <h2>Desempenho por assunto</h2>
   <div class="tw"><table><thead><tr><th>Assunto</th><th>Questões</th><th>Respondidas</th><th>Acertos</th></tr></thead><tbody id="placar"></tbody></table></div>
-  <p class="muted">Vale a última resposta de cada questão. O progresso fica guardado só neste navegador.</p>
+  <p class="muted">Vale a última resposta de cada questão. Cada resposta é salva na hora, e ao voltar você continua de onde parou. Tudo fica guardado neste navegador; para mudar de aparelho, use o link mais abaixo.</p>
+</section>
+<section style="display:grid;gap:10px">
+  <h2>Histórico dos simulados</h2>
+  <div id="hist" style="display:grid;gap:10px"></div>
+</section>
+<section style="display:grid;gap:10px">
+  <h2>Continuar em outro aparelho</h2>
+  <p>Gere o link e abra no outro aparelho. Ele leva respostas, posição, histórico e marcações do plano, e junta com o que já houver lá. Vale sempre a resposta mais recente.</p>
+  <div><button class="main" id="leva">Gerar link com meu progresso</button></div>
+  <input id="linkp" readonly hidden aria-label="Link com o progresso" style="font:inherit;width:100%;padding:9px 14px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg)">
+  <p id="aviso" class="muted" role="status"></p>
+  <p class="muted">A passagem não é automática: gere um link novo sempre que trocar de aparelho.</p>
+</section>
+<section style="display:grid;gap:10px">
   <div><button id="zera">Apagar meu progresso</button></div>
 </section>
 <section style="display:grid;gap:10px">
@@ -80,6 +96,7 @@ ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
 </div>
 <script>
 // [assunto, enunciado, [correta, errada, errada, errada], comentário]
+// O progresso salvo usa a posição na lista: acrescentar questões só no fim e não reordenar.
 const B=[
 ["Constituição","Segundo o art. 37, XVI, da Constituição, com a redação da EC 138/2025, é permitida, havendo compatibilidade de horários, a acumulação remunerada de:",["um cargo de professor com outro de qualquer natureza","dois cargos técnicos ou científicos quaisquer","três cargos de professor","dois cargos administrativos, se em entes diferentes"],"Art. 37, XVI, b. A redação antiga falava em professor com cargo técnico ou científico. Continuam permitidos dois cargos de professor e dois cargos privativos de profissionais de saúde com profissões regulamentadas."],
 ["Constituição","O servidor nomeado para cargo efetivo em virtude de concurso público adquire estabilidade após:",["três anos de efetivo exercício, com avaliação especial de desempenho obrigatória","dois anos de efetivo exercício, sem necessidade de avaliação","cinco anos de efetivo exercício","a publicação da nomeação"],"Art. 41, caput e § 4º. O texto da Lei 8.112 ainda traz dois anos, mas prevalece a Constituição (EC 19/1998)."],
@@ -184,19 +201,40 @@ opt("leg","Só Legislação ("+B.filter(x=>!ehPed(x[0])).length+")");
 opt("ped","Só Pedagogia ("+B.filter(x=>ehPed(x[0])).length+")");
 T.forEach(t=>opt(t,t+" ("+B.filter(x=>x[0]===t).length+")"));
 const mix=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-let fila=[],pos=0,sim=false,ac=0,resp=[];
+// Sessões em andamento, uma por assunto e modo: posição, ordem e respostas.
+let S={},K="";try{const x=JSON.parse(localStorage.getItem("q-ifsp-sessoes")||"{}");S=x.S||{};K=x.K||""}catch(e){}
+const agora=()=>Math.floor(Date.now()/1000);
+// t = última ação dela na sessão; 0 = aberta sozinha, perde para qualquer progresso recebido.
+const keep=usou=>{S[K]={fila,pos,resp,t:usou?agora():(S[K]&&S[K].fila===fila&&S[K].t)||0};guardaS()};
+const guardaS=()=>{try{localStorage.setItem("q-ifsp-sessoes",JSON.stringify({S,K}))}catch(e){}};
+let TM={},H=[];
+try{TM=JSON.parse(localStorage.getItem("q-ifsp-t")||"{}")||{}}catch(e){}
+try{H=JSON.parse(localStorage.getItem("q-ifsp-hist")||"[]")}catch(e){}
+if(!Array.isArray(H))H=[];
+const guardaH=()=>{try{localStorage.setItem("q-ifsp-hist",JSON.stringify(H))}catch(e){}};
+const guardaT=()=>{try{localStorage.setItem("q-ifsp-t",JSON.stringify(TM))}catch(e){}};
+const histOk=h=>!!h&&Number.isInteger(h.t)&&typeof h.a==="string"&&h.a.length<80&&Number.isInteger(h.n)&&h.n>0&&Number.isInteger(h.ac)&&h.ac>=0&&h.ac<=h.n&&Array.isArray(h.e)&&h.e.every(x=>Array.isArray(x)&&B[x[0]]&&[0,1,2,3].includes(x[1]));
+H=H.filter(histOk);
+const chave=()=>$("tema").value+"|"+$("modo").value;
+const valida=s=>!!s&&Array.isArray(s.fila)&&s.fila.length>0&&Array.isArray(s.resp)&&Number.isInteger(s.pos)&&s.pos>=0&&s.pos<=s.fila.length&&s.fila.every(f=>f&&B[f.i]&&Array.isArray(f.o)&&[...f.o].sort().join()==="0,1,2,3");
+const aberta=k=>valida(S[k])&&S[k].pos<S[k].fila.length;
+function botoes(){const a=aberta(chave());$("go").textContent=a?"Continuar":"Começar";$("re").hidden=!a;$("re").textContent="Recomeçar";reconf=false}
+function retoma(k){K=k;sim=k.split("|")[1]==="s";({fila,pos,resp}=S[k]);show()}
+let fila=[],pos=0,sim=false,resp=[],reconf=false;
 function pool(){const t=$("tema").value;return B.map((x,i)=>i).filter(i=>t==="*"||(t==="leg"&&!ehPed(B[i][0]))||(t==="ped"&&ehPed(B[i][0]))||B[i][0]===t)}
-function start(){
+function start(usou=true){
   const m=$("modo").value;sim=m==="s";let p=pool();
   if(m==="r")p=p.filter(i=>P[i]===0);
   if(sim&&$("tema").value==="*"){p=mix([...mix(p.filter(i=>!ehPed(B[i][0]))).slice(0,9),...mix(p.filter(i=>ehPed(B[i][0]))).slice(0,6)])}
   else{p=mix(p);if(sim)p=p.slice(0,15)}
-  fila=p.map(i=>({i,o:mix([0,1,2,3])}));pos=0;ac=0;resp=[];show();
+  fila=p.map(i=>({i,o:mix([0,1,2,3])}));pos=0;resp=[];K=chave();show(usou);
 }
 function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e}
 function head(box,a,b){const m=el("div","meta");m.append(el("span","",a),el("span","",b));box.appendChild(m)}
-function show(){
+function show(usou){
   const box=$("q");box.replaceChildren();
+  if(fila.length)keep(usou);else{delete S[K];guardaS()}
+  botoes();
   if(!fila.length){box.appendChild(el("p","","Não há questões nesta seleção. Escolha outro assunto ou modo."));return}
   if(pos>=fila.length)return fim(box);
   const {i,o}=fila[pos],[t,en,al,co]=B[i];
@@ -205,21 +243,84 @@ function show(){
   const w=el("div","alts"),bs=[];
   const next=el("button","main",pos+1<fila.length?"Próxima":"Ver resultado");next.disabled=true;
   let esc=null;
-  o.forEach((k,n)=>{const b=el("button","alt");b.append(el("b","",L[n]),el("span","",al[k]));b.onclick=()=>{
-    esc=k;bs.forEach(x=>x.classList.remove("sel"));b.classList.add("sel");next.disabled=false;
+  const marca=(k,foco)=>{
+    esc=k;bs.forEach((x,q)=>x.classList.toggle("sel",o[q]===k));next.disabled=false;
     if(!sim){bs.forEach((x,q)=>{x.disabled=true;if(o[q]===0)x.classList.add("ok");else if(o[q]===k)x.classList.add("bad")});
-      const c=el("p","com",(k===0?"Certo. ":"Errado. ")+co);box.insertBefore(c,next);next.focus()}
-  };bs.push(b);w.appendChild(b)});
-  next.onclick=()=>{const ok=esc===0?1:0;ac+=ok;P[i]=ok;resp.push(esc);save();placar();pos++;show()};
+      box.insertBefore(el("p","com",(k===0?"Certo. ":"Errado. ")+co),next);if(foco)next.focus()}
+  };
+  const grava=()=>{P[i]=esc===0?1:0;TM[i]=agora();save();guardaT();placar()};
+  o.forEach((k,n)=>{const b=el("button","alt");b.append(el("b","",L[n]),el("span","",al[k]));b.onclick=()=>{marca(k,true);resp[pos]=k;keep(true);if(!sim)grava()};bs.push(b);w.appendChild(b)});
+  // No simulado o placar só muda ao avançar, para não revelar o acerto.
+  next.onclick=()=>{if(sim)grava();pos++;if(sim&&pos===fila.length)registra();show(true)};
   box.append(w,next);
+  if(resp[pos]!=null)marca(resp[pos],false);
 }
+function registra(){
+  H.push({t:agora(),a:K.split("|")[0],ac:resp.filter(r=>r===0).length,n:fila.length,e:fila.map((f,n)=>[f.i,resp[n]]).filter(x=>x[1]!==0)});
+  guardaH();historico();
+}
+function historico(){
+  const box=$("hist");box.replaceChildren();
+  if(!H.length){box.appendChild(el("p","muted","Nenhum simulado concluído ainda. Escolha o modo Simulado e vá até o resultado."));return}
+  const nome=a=>a==="*"?"Tudo":a==="leg"?"Só Legislação":a==="ped"?"Só Pedagogia":a;
+  const w=el("div","tw"),tb=el("table"),th=el("thead"),tr=el("tr"),bd=el("tbody");
+  ["Data","Assunto","Acertos","%"].forEach(x=>tr.appendChild(el("th","",x)));th.appendChild(tr);tb.append(th,bd);w.appendChild(tb);box.appendChild(w);
+  const ord=[...H].sort((x,y)=>y.t-x.t),dt=h=>new Date(h.t*1000).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+  ord.forEach(h=>{const l=el("tr");[dt(h),nome(h.a),h.ac+" de "+h.n,Math.round(100*h.ac/h.n)+"%"].forEach(x=>l.appendChild(el("td","",x)));bd.appendChild(l)});
+  ord.filter(h=>h.e.length).forEach(h=>{const d=el("details");d.appendChild(el("summary","","Erros de "+dt(h)+" ("+h.e.length+")"));
+    h.e.forEach(([i,k])=>{const [t,en,al,co]=B[i],c=el("div","com");c.append(el("p","enun",en),el("p","","Sua resposta: "+al[k]+"."),el("p","","Correta: "+al[0]+"."),el("p","muted",co));d.appendChild(c)});box.appendChild(d)});
+}
+// Link com o progresso. Vai depois do #, que o navegador não envia ao servidor.
+const SITE="https://igorraiol.github.io/estudos-concurso/questoes.html";
+const PERM=[];for(let a=0;a<4;a++)for(let b=0;b<4;b++)for(let c=0;c<4;c++)for(let d=0;d<4;d++)if(new Set([a,b,c,d]).size===4)PERM.push([a,b,c,d].join(""));
+const b36=n=>n.toString(36);
+function pacote(){
+  const s={};Object.keys(S).forEach(k=>{const x=S[k];if(valida(x)&&x.t)s[k]=[x.t,x.pos,x.fila.map((f,n)=>b36(f.i).padStart(2,"0")+b36(PERM.indexOf(f.o.join("")))+(x.resp[n]==null?"-":x.resp[n])).join("")]});
+  let d=[];try{const x=JSON.parse(localStorage.getItem("plano-ifsp")||"{}");d=Object.keys(x).filter(k=>x[k])}catch(e){}
+  const j=JSON.stringify({v:1,p:B.map((x,i)=>i in P?P[i]:"-").join(""),t:B.map((x,i)=>TM[i]?b36(TM[i]):"").join(","),s,h:H,d});
+  return btoa(Array.from(new TextEncoder().encode(j),c=>String.fromCharCode(c)).join("")).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function recebe(cod){
+  const j=JSON.parse(new TextDecoder("utf-8",{fatal:true}).decode(Uint8Array.from(atob(cod.replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0))));
+  if(!j||j.v!==1||typeof j.p!=="string"||typeof j.t!=="string")throw 0;
+  const lim=agora(),tm=x=>{const n=Number.isInteger(x)&&x>0?x:0;return Math.min(n,lim)};
+  let q=0,hs=0;const ts=j.t.split(",");
+  B.forEach((x,i)=>{const c=j.p[i];if(c!=="0"&&c!=="1")return;const n=tm(parseInt(ts[i]||"0",36));
+    if(!(i in P)||n>(TM[i]||0)){P[i]=+c;if(n)TM[i]=n;q++}});
+  Object.entries(j.s||{}).forEach(([k,v])=>{
+    if(!/^[^|]{1,60}\|[ers]$/.test(k)||!Array.isArray(v)||typeof v[2]!=="string")return;
+    const its=v[2].match(/.{4}/g)||[],s={t:tm(v[0]),pos:v[1],fila:its.map(c=>({i:parseInt(c.slice(0,2),36),o:(PERM[parseInt(c[2],36)]||"").split("").map(Number)})),resp:its.map(c=>/[0-3]/.test(c[3])?+c[3]:null)};
+    if(valida(s)&&s.t>((S[k]&&S[k].t)||0))S[k]=s});
+  (Array.isArray(j.h)?j.h:[]).filter(histOk).forEach(h=>{if(!H.some(x=>x.t===h.t&&x.a===h.a)){H.push({t:tm(h.t),a:h.a,ac:h.ac,n:h.n,e:h.e.map(x=>[x[0],x[1]])});hs++}});
+  let pl={};try{pl=JSON.parse(localStorage.getItem("plano-ifsp")||"{}")||{}}catch(e){}
+  (Array.isArray(j.d)?j.d:[]).forEach(d=>{if(/^\d{4}-\d\d-\d\d$/.test(d))pl[d]=true});
+  try{localStorage.setItem("plano-ifsp",JSON.stringify(pl))}catch(e){}
+  K=Object.keys(S).filter(k=>valida(S[k])).sort((a,b)=>(S[b].t||0)-(S[a].t||0))[0]||K;
+  save();guardaT();guardaS();guardaH();
+  return "Progresso recebido: "+q+(q===1?" resposta nova ou mais recente":" respostas novas ou mais recentes")+" e "+hs+(hs===1?" simulado.":" simulados.");
+}
+function chegada(){
+  if(!location.hash.startsWith("#p="))return;
+  let m;try{m=recebe(location.hash.slice(3))}catch(e){m="Não consegui ler este link. Ele pode ter vindo cortado; gere outro no aparelho de origem. Nada foi alterado aqui."}
+  try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+  $("recebido").textContent=m;$("recebido").hidden=false;
+}
+addEventListener("hashchange",()=>{if(location.hash.startsWith("#p="))location.reload()});
+$("leva").onclick=async()=>{
+  const u=SITE+"#p="+pacote(),c=$("linkp");c.value=u;c.hidden=false;
+  let m="";
+  if(navigator.share&&matchMedia("(pointer:coarse)").matches){try{await navigator.share({title:"Meu progresso",url:u});m="Link gerado. Abra-o no outro aparelho."}catch(e){}}
+  if(!m){try{await navigator.clipboard.writeText(u);m="Link copiado. Envie para você e abra no outro aparelho."}catch(e){c.focus();c.select();m="Copie o link acima e abra no outro aparelho."}}
+  $("aviso").textContent=m;
+};
 function fim(box){
+  const ac=resp.filter(r=>r===0).length;
   head(box,"Resultado",ac+" de "+fila.length+" acertos");
   box.appendChild(el("p","enun",Math.round(100*ac/fila.length)+"% de acerto"+(sim&&fila.length===15?", o que daria "+(ac*2.5).toLocaleString("pt-BR")+" de 37,5 pontos":"")+"."));
   const er=fila.map((f,n)=>[f,n]).filter(([f,n])=>resp[n]!==0);
   if(er.length)box.appendChild(el("h2","","Para rever"));
   er.forEach(([f,n])=>{const [t,en,al,co]=B[f.i],d=el("div","com");d.append(el("p","enun",en),el("p","","Sua resposta: "+al[resp[n]]+"."),el("p","","Correta: "+al[0]+"."),el("p","muted",co));box.appendChild(d)});
-  const b=el("button","main","Começar de novo");b.onclick=start;box.appendChild(b);
+  const b=el("button","main","Começar de novo");b.onclick=()=>start();box.appendChild(b);
 }
 function placar(){
   const tb=$("placar");tb.replaceChildren();
@@ -227,8 +328,13 @@ function placar(){
     [t,ids.length,r.length,r.length?r.filter(i=>P[i]).length:"-"].forEach(v=>tr.appendChild(el("td","",v)));tb.appendChild(tr)});
 }
 let conf=false;
-$("zera").onclick=()=>{if(!conf){conf=true;$("zera").textContent="Clique de novo para confirmar";return}conf=false;P={};save();placar();$("zera").textContent="Progresso apagado"};
-$("go").onclick=start;placar();start();
+$("zera").onclick=()=>{if(!conf){conf=true;$("zera").textContent="Clique de novo para apagar tudo, inclusive o histórico";return}conf=false;P={};S={};TM={};H=[];save();guardaT();guardaH();placar();historico();start(false);$("zera").textContent="Progresso apagado"};
+$("go").onclick=()=>{const k=chave();aberta(k)?retoma(k):start()};
+$("re").onclick=()=>{if(!reconf){reconf=true;$("re").textContent="Clique de novo para recomeçar";return}start()};
+$("tema").onchange=$("modo").onchange=botoes;
+chegada();placar();historico();
+{const [t,m]=K.split("|"),tem=(id,v)=>[...$(id).options].some(o=>o.value===v);
+if(valida(S[K])&&tem("tema",t)&&tem("modo",m)){$("tema").value=t;$("modo").value=m;retoma(K)}else start(false)}
 </script>
 
 </body>
